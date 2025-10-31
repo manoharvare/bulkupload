@@ -1,0 +1,87 @@
+ProjectId,ActivityId,ActivityName,WBS,WBS Name,Curve,Calendar,ResourceId,Resource Id Name,Resource Type,Budgeted Units,Actual Units,Remaining Units,Remaining Late Finish,5-July-25,12-July-25,19-July-25,26-July-25
+PRJ001,ACT001,Excavation,WBS-001,Earth Works,S-Curve,BaseCal,RES001,Operator,Labor,1000,200,800,10,10,15,12,13
+PRJ001,ACT002,Concrete,WBS-002,Foundation,S-Curve,BaseCal,RES002,Mason,Labor,1200,300,900,20,14,16,18,15
+PRJ001,ACT003,Steel Work,WBS-003,Structure,S-Curve,BaseCal,RES003,Fitter,Labor,1500,500,1000,25,11,19,22,18
+PRJ001,ACT004,Welding,WBS-004,Pipeline,S-Curve,BaseCal,RES004,Welder,Labor,800,100,700,30,9,13,10,11
+PRJ001,ACT005,Painting,WBS-005,Coating,S-Curve,BaseCal,RES005,Painter,Labor,600,150,450,12,7,8,9,10
+PRJ001,ACT006,Scaffolding,WBS-006,Support,S-Curve,BaseCal,RES006,Helper,Labor,500,50,450,18,5,6,7,8
+PRJ001,ACT007,Electrical,WBS-007,Cable Work,S-Curve,BaseCal,RES007,Electrician,Labor,1100,400,700,14,10,12,13,11
+PRJ001,ACT008,Instrumentation,WBS-008,Control,S-Curve,BaseCal,RES008,Technician,Labor,900,300,600,16,8,9,10,11
+PRJ001,ACT009,Testing,WBS-009,Inspection,S-Curve,BaseCal,RES009,Inspector,Labor,400,100,300,9,4,5,6,7
+PRJ001,ACT010,Commissioning,WBS-010,Final Work,S-Curve,BaseCal,RES010,Supervisor,Labor,1000,500,500,8,12,13,15,14
+PRJ001,ACT011,Excavation,WBS-011,Trench,S-Curve,BaseCal,RES011,Operator,Labor,950,180,770,15,9,10,11,12
+PRJ001,ACT012,Concrete,WBS-012,Footing,S-Curve,BaseCal,RES012,Mason,Labor,1100,250,850,20,14,16,18,17
+PRJ001,ACT013,Steel Work,WBS-013,Frame,S-Curve,BaseCal,RES013,Fitter,Labor,1300,400,900,25,11,19,22,21
+PRJ001,ACT014,Welding,WBS-014,Pipe Joint,S-Curve,BaseCal,RES014,Welder,Labor,700,120,580,30,8,12,10,9
+PRJ001,ACT015,Painting,WBS-015,Surface,S-Curve,BaseCal,RES015,Painter,Labor,550,130,420,12,6,7,8,9
+PRJ001,ACT016,Scaffolding,WBS-016,Support,S-Curve,BaseCal,RES016,Helper,Labor,480,60,420,18,5,6,7,8
+PRJ001,ACT017,Electrical,WBS-017,Panel Wiring,S-Curve,BaseCal,RES017,Electrician,Labor,1050,380,670,14,9,11,12,10
+PRJ001,ACT018,Instrumentation,WBS-018,Sensors,S-Curve,BaseCal,RES018,Technician,Labor,850,280,570,16,8,9,10,11
+PRJ001,ACT019,Testing,WBS-019,QA,S-Curve,BaseCal,RES019,Inspector,Labor,390,90,300,9,4,5,6,7
+PRJ001,ACT020,Commissioning,WBS-020,Start-Up,S-Curve,BaseCal,RES020,Supervisor,Labor,980,480,500,8,11,12,13,12
+PRJ001,ACT021,Excavation,WBS-021,Foundation Pit,S-Curve,BaseCal,RES021,Operator,Labor,1020,220,800,15,10,11,12,13
+PRJ001,ACT022,Concrete,WBS-022,Column,S-Curve,BaseCal,RES022,Mason,Labor,1250,320,930,20,13,15,17,18
+PRJ001,ACT023,Steel Work,WBS-023,Beam Fabrication,S-Curve,BaseCal,RES023,Fitter,Labor,1400,450,950,25,12,20,21,19
+PRJ001,ACT024,Welding,WBS-024,Joint,S-Curve,BaseCal,RES024,Welder,Labor,750,140,610,30,9,12,11,10
+PRJ001,ACT025,Painting,WBS-025,Primer,S-Curve,BaseCal,RES025,Painter,Labor,620,160,460,12,6,8,9,10
+PRJ001,ACT026,Scaffolding,WBS-026,Access,S-Curve,BaseCal,RES026,Helper,Labor,520,80,440,18,5,7,8,9
+PRJ001,ACT027,Electrical,WBS-027,Cable Tray,S-Curve,BaseCal,RES027,Electrician,Labor,1150,420,730,14,10,12,13,11
+PRJ001,ACT028,Instrumentation,WBS-028,Calibration,S-Curve,BaseCal,RES028,Technician,Labor,930,310,620,16,8,9,11,12
+PRJ001,ACT029,Testing,WBS-029,Pressure Test,S-Curve,BaseCal,RES029,Inspector,Labor,410,110,300,9,4,5,6,7
+PRJ001,ACT030,Commissioning,WBS-030,System,S-Curve,BaseCal,RES030,Supervisor,Labor,1010,510,500,8,12,13,14,15
+PRJ001,ACT031,Excavation,WBS-031,Backfill,S-Curve,BaseCal,RES031,Operator,Labor,990,190,800,15,9,10,12,13
+PRJ001,ACT032,Concrete,WBS-032,Wall,S-Curve,BaseCal,RES032,Mason,Labor,1180,280,900,20,14,16,18,17
+PRJ001,ACT033,Steel Work,WBS-033,Frame,S-Curve,BaseCal,RES033,Fitter,Labor,1450,470,980,25,11,19,22,20
+PRJ001,ACT034,Welding,WBS-034,Pipe,S-Curve,BaseCal,RES034,Welder,Labor,820,130,690,30,9,13,11,10
+PRJ001,ACT035,Painting,WBS-035,Finish,S-Curve,BaseCal,RES035,Painter,Labor,650,140,510,12,6,7,9,10
+PRJ001,ACT036,Scaffolding,WBS-036,Support,S-Curve,BaseCal,RES036,Helper,Labor,490,70,420,18,5,6,8,9
+PRJ001,ACT037,Electrical,WBS-037,Panel,S-Curve,BaseCal,RES037,Electrician,Labor,1080,400,680,14,10,11,13,12
+PRJ001,ACT038,Instrumentation,WBS-038,Control,S-Curve,BaseCal,RES038,Technician,Labor,880,290,590,16,8,9,10,11
+PRJ001,ACT039,Testing,WBS-039,QA,S-Curve,BaseCal,RES039,Inspector,Labor,420,120,300,9,4,5,6,7
+PRJ001,ACT040,Commissioning,WBS-040,Start,S-Curve,BaseCal,RES040,Supervisor,Labor,970,470,500,8,11,12,13,14
+PRJ001,ACT041,Excavation,WBS-041,Ground,S-Curve,BaseCal,RES041,Operator,Labor,950,180,770,15,9,10,11,12
+PRJ001,ACT042,Concrete,WBS-042,Base Slab,S-Curve,BaseCal,RES042,Mason,Labor,1220,320,900,20,13,15,17,18
+PRJ001,ACT043,Steel Work,WBS-043,Structure,S-Curve,BaseCal,RES043,Fitter,Labor,1420,460,960,25,11,19,22,20
+PRJ001,ACT044,Welding,WBS-044,Pipe Joint,S-Curve,BaseCal,RES044,Welder,Labor,780,140,640,30,8,12,10,9
+PRJ001,ACT045,Painting,WBS-045,Top Coat,S-Curve,BaseCal,RES045,Painter,Labor,600,130,470,12,6,7,8,9
+PRJ001,ACT046,Scaffolding,WBS-046,Access,S-Curve,BaseCal,RES046,Helper,Labor,500,60,440,18,5,6,7,8
+PRJ001,ACT047,Electrical,WBS-047,Lighting,S-Curve,BaseCal,RES047,Electrician,Labor,1120,410,710,14,10,12,13,11
+PRJ001,ACT048,Instrumentation,WBS-048,Sensors,S-Curve,BaseCal,RES048,Technician,Labor,920,300,620,16,8,9,11,12
+PRJ001,ACT049,Testing,WBS-049,Pressure,S-Curve,BaseCal,RES049,Inspector,Labor,430,130,300,9,4,5,6,7
+PRJ001,ACT050,Commissioning,WBS-050,Final,S-Curve,BaseCal,RES050,Supervisor,Labor,990,490,500,8,12,13,14,15
+PRJ001,ACT051,Excavation,WBS-051,Trench,S-Curve,BaseCal,RES051,Operator,Labor,970,200,770,15,9,10,11,12
+PRJ001,ACT052,Concrete,WBS-052,Foundation,S-Curve,BaseCal,RES052,Mason,Labor,1240,310,930,20,13,15,17,18
+PRJ001,ACT053,Steel Work,WBS-053,Beam,S-Curve,BaseCal,RES053,Fitter,Labor,1480,480,1000,25,12,19,22,21
+PRJ001,ACT054,Welding,WBS-054,Joint,S-Curve,BaseCal,RES054,Welder,Labor,800,130,670,30,8,12,11,10
+PRJ001,ACT055,Painting,WBS-055,Surface,S-Curve,BaseCal,RES055,Painter,Labor,630,150,480,12,6,8,9,10
+PRJ001,ACT056,Scaffolding,WBS-056,Access,S-Curve,BaseCal,RES056,Helper,Labor,510,70,440,18,5,6,7,8
+PRJ001,ACT057,Electrical,WBS-057,Panel,S-Curve,BaseCal,RES057,Electrician,Labor,1140,430,710,14,10,12,13,11
+PRJ001,ACT058,Instrumentation,WBS-058,Calibration,S-Curve,BaseCal,RES058,Technician,Labor,940,320,620,16,8,9,10,11
+PRJ001,ACT059,Testing,WBS-059,QA,S-Curve,BaseCal,RES059,Inspector,Labor,440,140,300,9,4,5,6,7
+PRJ001,ACT060,Commissioning,WBS-060,Start-Up,S-Curve,BaseCal,RES060,Supervisor,Labor,1000,500,500,8,12,13,14,15
+PRJ001,ACT061,Excavation,WBS-061,Ground,S-Curve,BaseCal,RES061,Operator,Labor,980,210,770,15,9,10,12,13
+PRJ001,ACT062,Concrete,WBS-062,Base Slab,S-Curve,BaseCal,RES062,Mason,Labor,1260,330,930,20,14,16,18,17
+PRJ001,ACT063,Steel Work,WBS-063,Structure,S-Curve,BaseCal,RES063,Fitter,Labor,1500,490,1010,25,11,19,22,21
+PRJ001,ACT064,Welding,WBS-064,Pipe Joint,S-Curve,BaseCal,RES064,Welder,Labor,820,140,680,30,9,13,11,10
+PRJ001,ACT065,Painting,WBS-065,Top Coat,S-Curve,BaseCal,RES065,Painter,Labor,640,160,480,12,6,7,8,9
+PRJ001,ACT066,Scaffolding,WBS-066,Access,S-Curve,BaseCal,RES066,Helper,Labor,520,80,440,18,5,6,7,8
+PRJ001,ACT067,Electrical,WBS-067,Lighting,S-Curve,BaseCal,RES067,Electrician,Labor,1160,440,720,14,10,12,13,11
+PRJ001,ACT068,Instrumentation,WBS-068,Control,S-Curve,BaseCal,RES068,Technician,Labor,950,330,620,16,8,9,11,12
+PRJ001,ACT069,Testing,WBS-069,Pressure,S-Curve,BaseCal,RES069,Inspector,Labor,450,150,300,9,4,5,6,7
+PRJ001,ACT070,Commissioning,WBS-070,Final,S-Curve,BaseCal,RES070,Supervisor,Labor,1010,510,500,8,12,13,14,15
+PRJ001,ACT071,Excavation,WBS-071,Backfill,S-Curve,BaseCal,RES071,Operator,Labor,960,190,770,15,9,10,12,13
+PRJ001,ACT072,Concrete,WBS-072,Wall,S-Curve,BaseCal,RES072,Mason,Labor,1200,290,910,20,14,16,18,17
+PRJ001,ACT073,Steel Work,WBS-073,Frame,S-Curve,BaseCal,RES073,Fitter,Labor,1460,470,990,25,11,19,22,21
+PRJ001,ACT074,Welding,WBS-074,Pipe,S-Curve,BaseCal,RES074,Welder,Labor,810,130,680,30,9,12,11,10
+PRJ001,ACT075,Painting,WBS-075,Finish,S-Curve,BaseCal,RES075,Painter,Labor,620,140,480,12,6,7,9,10
+PRJ001,ACT076,Scaffolding,WBS-076,Support,S-Curve,BaseCal,RES076,Helper,Labor,500,70,430,18,5,6,8,9
+PRJ001,ACT077,Electrical,WBS-077,Panel,S-Curve,BaseCal,RES077,Electrician,Labor,1100,420,680,14,10,11,13,12
+PRJ001,ACT078,Instrumentation,WBS-078,Control,S-Curve,BaseCal,RES078,Technician,Labor,900,300,600,16,8,9,10,11
+PRJ001,ACT079,Testing,WBS-079,QA,S-Curve,BaseCal,RES079,Inspector,Labor,430,130,300,9,4,5,6,7
+PRJ001,ACT080,Commissioning,WBS-080,Start,S-Curve,BaseCal,RES080,Supervisor,Labor,980,480,500,8,11,12,13,14
+PRJ001,ACT081,Excavation,WBS-081,Ground,S-Curve,BaseCal,RES081,Operator,Labor,950,180,770,15,9,10,11,12
+PRJ001,ACT082,Concrete,WBS-082,Base Slab,S-Curve,BaseCal,RES082,Mason,Labor,1220,320,900,20,13,15,17,18
+PRJ001,ACT083,Steel Work,WBS-083,Structure,S-Curve,BaseCal,RES083,Fitter,Labor,1420,460,960,25,11,19,22,20
+PRJ001,ACT084,Welding,WBS-084,Pipe Joint,S-Curve,BaseCal,RES084,Welder,Labor,780,140,640,30,8,12,10,9
+PRJ001,ACT085,Painting,WBS-085,Top Coat,S-Curve,BaseCal,RES085,Painter,Labor,600,130,470,12,6,7,8,9
+PRJ001,ACT086,Scaffolding,WBS-086,Access,S-Curve,BaseCal,RES086,Helper,Labor,500,60,440,18,5,6,7,8

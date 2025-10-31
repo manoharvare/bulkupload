@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Oil & Gas Import Progress</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f8fafc; padding: 30px; color: #222; }
+    h2 { color: #0078d7; }
+    .upload-section { margin-bottom: 20px; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    input[type="file"] { margin-top: 10px; }
+    button { background: #0078d7; color: white; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; margin-left: 10px; }
+    button:hover { background: #005fa3; }
+    pre { background: #111; color: #0f0; padding: 15px; height: 150px; overflow-y: auto; border-radius: 6px; margin-bottom: 20px; }
+    table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
+    th, td { border: 1px solid #ccc; padding: 6px; text-align: left; }
+    th { background-color: #f0f0f0; }
+    .pagination button { margin: 2px; }
+  </style>
+</head>
+<body>
+  <h2>📦 Oil & Gas Import Progress Monitor</h2>
+
+  <div class="upload-section">
+    <label for="file">Select CSV File:</label>
+    <input type="file" id="file" accept=".csv" />
+    <button id="uploadBtn">Upload & Start Import</button>
+  </div>
+
+  <pre id="log">Waiting for connection...</pre>
+
+  <h2>Resource Spread Data</h2>
+  <table id="resourceTable">
+    <thead id="resourceHeader"></thead>
+    <tbody id="resourceBody"></tbody>
+  </table>
+  <div id="resourcePagination" class="pagination"></div>
+
+  <h2>Craft Spread Data</h2>
+  <table id="craftTable">
+    <thead id="craftHeader"></thead>
+    <tbody id="craftBody"></tbody>
+  </table>
+  <div id="craftPagination" class="pagination"></div>
+
+  <script>
+    const logEl = document.getElementById("log");
+    const uploadBtn = document.getElementById("uploadBtn");
+    const fileInput = document.getElementById("file");
+
+    let resourcePage = 1;
+    let craftPage = 1;
+    const pageSize = 20;
+    let currentRevision = "";
+
+    function log(msg) {
+      logEl.textContent += msg + "\n";
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    // SignalR setup
+    const connection = new signalR.HubConnectionBuilder()
+      .withUrl("http://localhost:5012/hubs/import")
+      .configureLogging(signalR.LogLevel.Information)
+      .build();
+
+    connection.on("ImportProgress", data => {
+      log(`📊 ${data.progressPercent}% | ${data.rowsProcessed}/${data.totalEstimatedRecords} (Batch ${data.currentBatch}/${data.totalBatches})`);
+    });
+
+    connection.on("ImportCompleted", data => {
+      log(`✅ Completed Import: ${data.totalRecords} rows for file ${data.fileKey}`);
+      currentRevision = data.fileKey;
+      afterUpload(currentRevision);
+    });
+
+    connection.on("ImportError", data => {
+      log(`❌ Error at row ${data.row}: ${data.error}`);
+    });
+
+    async function startConnection() {
+      try {
+        await connection.start();
+        log("✅ Connected to SignalR Hub.");
+      } catch (err) {
+        console.error(err);
+        setTimeout(startConnection, 5000);
+      }
+    }
+
+    connection.onclose(startConnection);
+    startConnection();
+
+    uploadBtn.addEventListener("click", async () => {
+      const file = fileInput.files[0];
+      if (!file) { alert("Please select a file to upload."); return; }
+
+      const fileKey = "resource-import";
+      await connection.invoke("JoinFileGroup", fileKey);
+      log(`📡 Joined file group: ${fileKey}`);
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      log("🚀 Uploading file to API...");
+      try {
+        const response = await fetch(`http://localhost:5012/api/import/upload?fileKey=${encodeURIComponent(fileKey)}`, {
+          method: "POST",
+          body: formData
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          log(`❌ Upload failed: ${errorText}`);
+          return;
+        }
+
+        const result = await response.json();
+        log(`✅ Upload accepted, tracking fileKey: ${fileKey}`);
+        currentRevision = result.fileKey;
+        afterUpload(currentRevision);
+
+      } catch (err) {
+        console.error(err);
+        log(`❌ Upload error: ${err.message}`);
+      }
+    });
+
+    // --- Functions to fetch and render tables ---
+    async function loadResourceData(revision, page) {
+      const url = `http://localhost:5012/api/ResourceSpread?revision=${revision}&page=${page}&pageSize=${pageSize}`;
+      const response = await fetch(url);
+      const result = await response.json();
+
+      renderResourceTable(result.data);
+      renderPagination(result.totalCount, page, pageSize, "resource", revision);
+    }
+
+    async function loadCraftData(revision, page = 1) {
+      const url = `http://localhost:5012/api/CraftSpread?revision=${revision}&page=${page}&pageSize=${pageSize}`;
+      const response = await fetch(url);
+      const result = await response.json();
+
+      renderCraftTable(result.data, result.columns);
+      renderCraftPagination(result.totalCount, page, pageSize, revision);
+    }
+
+    function renderResourceTable(data) {
+      const headerEl = document.getElementById("resourceHeader");
+      const bodyEl = document.getElementById("resourceBody");
+      headerEl.innerHTML = "";
+      bodyEl.innerHTML = "";
+
+      if (!data.length) {
+        bodyEl.innerHTML = `<tr><td colspan="50">No data found.</td></tr>`;
+        return;
+      }
+
+      const trHead = document.createElement("tr");
+      Object.keys(data[0]).forEach(h => { 
+        const th = document.createElement("th"); 
+        th.textContent = h; 
+        trHead.appendChild(th); 
+      });
+      headerEl.appendChild(trHead);
+
+      data.forEach(row => {
+        const tr = document.createElement("tr");
+        Object.values(row).forEach(val => { 
+          const td = document.createElement("td"); 
+          td.textContent = val; 
+          tr.appendChild(td); 
+        });
+        bodyEl.appendChild(tr);
+      });
+    }
+
+    function renderCraftTable(data, weeks) {
+      const headerEl = document.getElementById("craftHeader");
+      const bodyEl = document.getElementById("craftBody");
+      headerEl.innerHTML = "";
+      bodyEl.innerHTML = "";
+
+      if (!data.length) {
+        bodyEl.innerHTML = `<tr><td colspan="50">No data found.</td></tr>`;
+        return;
+      }
+
+      const trHead = document.createElement("tr");
+      ["ProjectId", "ActivityId", "ActivityName"].concat(weeks).forEach(h => { 
+        const th = document.createElement("th"); 
+        th.textContent = h; 
+        trHead.appendChild(th); 
+      });
+      headerEl.appendChild(trHead);
+
+      data.forEach(row => {
+        const tr = document.createElement("tr");
+        tr.appendChild(td(row.projectId));
+        tr.appendChild(td(row.activityId));
+        tr.appendChild(td(row.activityName));
+        weeks.forEach(w => tr.appendChild(td(row.weeks[w] || 0)));
+        bodyEl.appendChild(tr);
+      });
+
+      function td(val) { const td = document.createElement("td"); td.textContent = val; return td; }
+    }
+
+    function renderPagination(totalCount, currentPage, pageSize, type, revision) {
+      const totalPages = Math.ceil(totalCount / pageSize);
+      const container = document.getElementById(type + "Pagination");
+      container.innerHTML = "";
+
+      // for (let i = 1; i <= totalPages && i <= 10; i++) {
+      //   const btn = document.createElement("button");
+      //   btn.textContent = i;
+      //   btn.disabled = i === currentPage;
+      //   btn.onclick = () => {
+      //     resourcePage = i;
+      //     loadResourceData(revision, i);
+      //   };
+      //   container.appendChild(btn);
+      // }
+    }
+
+    function renderCraftPagination(totalCount, currentPage, pageSize, revision) {
+      const totalPages = Math.ceil(totalCount / pageSize);
+      const container = document.getElementById("craftPagination");
+      container.innerHTML = "";
+
+      // for (let i = 1; i <= totalPages && i <= 10; i++) {
+      //   const btn = document.createElement("button");
+      //   btn.textContent = i;
+      //   btn.disabled = i === currentPage;
+      //   btn.onclick = () => {
+      //     craftPage = i;
+      //     loadCraftData(revision, i);
+      //   };
+      //   container.appendChild(btn);
+      // }
+    }
+
+    async function afterUpload(revision) {
+      resourcePage = 1;
+      craftPage = 1;
+      await loadResourceData(revision, resourcePage);
+      await loadCraftData(revision, craftPage);
+    }
+  </script>
+</body>
+</html>
