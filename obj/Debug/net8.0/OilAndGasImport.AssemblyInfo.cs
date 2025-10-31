@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("OilAndGasImport")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+72df63fac8e8eabaee3a7aaa043424f86ea7f7d2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ed8f834b563624150a6900272890129cf98bdaaa")]
 [assembly: System.Reflection.AssemblyProductAttribute("OilAndGasImport")]
 [assembly: System.Reflection.AssemblyTitleAttribute("OilAndGasImport")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
