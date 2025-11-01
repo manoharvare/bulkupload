@@ -52,13 +52,14 @@
     let craftPage = 1;
     const pageSize = 20;
     let currentRevision = "";
+    let isImporting = false;
 
     function log(msg) {
       logEl.textContent += msg + "\n";
       logEl.scrollTop = logEl.scrollHeight;
     }
 
-    // SignalR setup
+    // --- SignalR setup ---
     const connection = new signalR.HubConnectionBuilder()
       .withUrl("http://localhost:5012/hubs/import")
       .configureLogging(signalR.LogLevel.Information)
@@ -71,11 +72,13 @@
     connection.on("ImportCompleted", data => {
       log(`✅ Completed Import: ${data.totalRecords} rows for file ${data.fileKey}`);
       currentRevision = data.fileKey;
+      isImporting = false; // mark complete
       afterUpload(currentRevision);
     });
 
     connection.on("ImportError", data => {
       log(`❌ Error at row ${data.row}: ${data.error}`);
+      isImporting = false;
     });
 
     async function startConnection() {
@@ -91,11 +94,15 @@
     connection.onclose(startConnection);
     startConnection();
 
+    // --- File Upload ---
     uploadBtn.addEventListener("click", async () => {
       const file = fileInput.files[0];
-      if (!file) { alert("Please select a file to upload."); return; }
+      if (!file) return alert("Please select a file to upload.");
+      if (isImporting) return alert("Import already in progress...");
 
       const fileKey = "resource-import";
+      isImporting = true;
+
       await connection.invoke("JoinFileGroup", fileKey);
       log(`📡 Joined file group: ${fileKey}`);
 
@@ -112,26 +119,26 @@
         if (!response.ok) {
           const errorText = await response.text();
           log(`❌ Upload failed: ${errorText}`);
+          isImporting = false;
           return;
         }
 
         const result = await response.json();
-        log(`✅ Upload accepted, tracking fileKey: ${fileKey}`);
-        currentRevision = result.fileKey;
-        afterUpload(currentRevision);
+        log(`✅ Upload accepted. Waiting for server import completion...`);
+        // ⛔ Do not call afterUpload() here — wait for SignalR ImportCompleted
 
       } catch (err) {
         console.error(err);
         log(`❌ Upload error: ${err.message}`);
+        isImporting = false;
       }
     });
 
-    // --- Functions to fetch and render tables ---
+    // --- Data Rendering ---
     async function loadResourceData(revision, page) {
       const url = `http://localhost:5012/api/ResourceSpread?revision=${revision}&page=${page}&pageSize=${pageSize}`;
       const response = await fetch(url);
       const result = await response.json();
-
       renderResourceTable(result.data);
       renderPagination(result.totalCount, page, pageSize, "resource", revision);
     }
@@ -140,7 +147,6 @@
       const url = `http://localhost:5012/api/CraftSpread?revision=${revision}&page=${page}&pageSize=${pageSize}`;
       const response = await fetch(url);
       const result = await response.json();
-
       renderCraftTable(result.data, result.columns);
       renderCraftPagination(result.totalCount, page, pageSize, revision);
     }
@@ -157,19 +163,19 @@
       }
 
       const trHead = document.createElement("tr");
-      Object.keys(data[0]).forEach(h => { 
-        const th = document.createElement("th"); 
-        th.textContent = h; 
-        trHead.appendChild(th); 
+      Object.keys(data[0]).forEach(h => {
+        const th = document.createElement("th");
+        th.textContent = h;
+        trHead.appendChild(th);
       });
       headerEl.appendChild(trHead);
 
       data.forEach(row => {
         const tr = document.createElement("tr");
-        Object.values(row).forEach(val => { 
-          const td = document.createElement("td"); 
-          td.textContent = val; 
-          tr.appendChild(td); 
+        Object.values(row).forEach(val => {
+          const td = document.createElement("td");
+          td.textContent = val;
+          tr.appendChild(td);
         });
         bodyEl.appendChild(tr);
       });
@@ -187,10 +193,10 @@
       }
 
       const trHead = document.createElement("tr");
-      ["ProjectId", "ActivityId", "ActivityName"].concat(weeks).forEach(h => { 
-        const th = document.createElement("th"); 
-        th.textContent = h; 
-        trHead.appendChild(th); 
+      ["ProjectId", "ActivityId", "ActivityName"].concat(weeks).forEach(h => {
+        const th = document.createElement("th");
+        th.textContent = h;
+        trHead.appendChild(th);
       });
       headerEl.appendChild(trHead);
 
@@ -210,37 +216,17 @@
       const totalPages = Math.ceil(totalCount / pageSize);
       const container = document.getElementById(type + "Pagination");
       container.innerHTML = "";
-
-      // for (let i = 1; i <= totalPages && i <= 10; i++) {
-      //   const btn = document.createElement("button");
-      //   btn.textContent = i;
-      //   btn.disabled = i === currentPage;
-      //   btn.onclick = () => {
-      //     resourcePage = i;
-      //     loadResourceData(revision, i);
-      //   };
-      //   container.appendChild(btn);
-      // }
     }
 
     function renderCraftPagination(totalCount, currentPage, pageSize, revision) {
       const totalPages = Math.ceil(totalCount / pageSize);
       const container = document.getElementById("craftPagination");
       container.innerHTML = "";
-
-      // for (let i = 1; i <= totalPages && i <= 10; i++) {
-      //   const btn = document.createElement("button");
-      //   btn.textContent = i;
-      //   btn.disabled = i === currentPage;
-      //   btn.onclick = () => {
-      //     craftPage = i;
-      //     loadCraftData(revision, i);
-      //   };
-      //   container.appendChild(btn);
-      // }
     }
 
     async function afterUpload(revision) {
+      if (!revision) return;
+      log(`📥 Loading imported data for revision: ${revision}`);
       resourcePage = 1;
       craftPage = 1;
       await loadResourceData(revision, resourcePage);

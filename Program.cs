@@ -20,9 +20,9 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// ✅ Database
+// ✅ Database: SQL Server (Docker)
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite("Data Source=oilgas.db"));
+    options.UseSqlServer("Server=localhost,1433;Database=AppDb;User Id=SA;Password=Pass@123;TrustServerCertificate=True;"));
 
 // ✅ Custom services
 builder.Services.AddScoped<CsvImportService>();

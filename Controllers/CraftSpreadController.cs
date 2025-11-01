@@ -25,7 +25,7 @@ public class CraftSpreadController : ControllerBase
         if (page <= 0) page = 1;
         if (pageSize <= 0) pageSize = 20;
 
-        var query = _context.CraftSpreads.AsQueryable();
+        var query = _context.CraftSpreads.AsNoTracking().AsQueryable();
 
         if (!string.IsNullOrEmpty(projectId))
             query = query.Where(c => c.ProjectId == projectId);
@@ -33,51 +33,45 @@ public class CraftSpreadController : ControllerBase
         if (!string.IsNullOrEmpty(revision))
             query = query.Where(c => c.Revision == revision);
 
-        // Fetch all filtered rows (we need full activity data for grouping)
-        var rawData = await query
-            .Select(c => new
-            {
-                c.Id,
-                c.ProjectId,
-                c.Revision,
-                c.ActivityId,
-                c.ActivityName,
-                c.ResourceId,
-                c.ResourceIdName,
-                c.ResourceType,
-                c.Week,
-                c.Value
-            })
+        // ✅ 1. Get all distinct weeks only once
+        var weeks = await query
+            .Select(c => c.Week)
+            .Distinct()
+            .OrderBy(w => w)
             .ToListAsync();
 
-        if (!rawData.Any())
-            return Ok(new { message = "No data found.", totalCount = 0, page, pageSize, columns = Array.Empty<string>(), data = Array.Empty<object>() });
-
-        // Determine all unique week columns
-        var weeks = rawData.Select(d => d.Week).Distinct().OrderBy(w => w).ToList();
-
-        // Group by Project + Activity
-        var grouped = rawData
-            .GroupBy(d => new { d.ProjectId, d.ActivityId, d.ActivityName })
+        // ✅ 2. Aggregate directly in SQL for paging performance
+        var groupedQuery = query
+            .GroupBy(c => new { c.ProjectId, c.ActivityId, c.ActivityName })
             .Select(g => new
             {
                 g.Key.ProjectId,
                 g.Key.ActivityId,
                 g.Key.ActivityName,
-                Weeks = weeks.ToDictionary(
-                    w => w,
-                    w => g.Where(x => x.Week == w).Sum(x => x.Value) // Sum values if multiple resources per week
-                )
-            })
-            .ToList();
+                Values = g.GroupBy(x => x.Week)
+                          .Select(wg => new { Week = wg.Key, Total = wg.Sum(x => x.Value) })
+            });
 
-        var totalCount = grouped.Count;
+        // ✅ 3. Count total records (before pagination)
+        var totalCount = await groupedQuery.CountAsync();
 
-        // Apply pagination at activity level
-        var pagedData = grouped
+        // ✅ 4. Fetch only the required page
+        var pagedData = await groupedQuery
+            .OrderBy(x => x.ProjectId)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .ToList();
+            .ToListAsync();
+
+        // ✅ 5. Build compact result (fill missing weeks as 0)
+        var result = pagedData.Select(row => new
+        {
+            row.ProjectId,
+            row.ActivityId,
+            row.ActivityName,
+            Weeks = weeks.ToDictionary(
+                w => w,
+                w => row.Values.FirstOrDefault(v => v.Week == w)?.Total ?? 0)
+        }).ToList();
 
         return Ok(new
         {
@@ -85,7 +79,7 @@ public class CraftSpreadController : ControllerBase
             page,
             pageSize,
             columns = weeks,
-            data = pagedData
+            data = result
         });
     }
 }
